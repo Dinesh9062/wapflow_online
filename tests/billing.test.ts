@@ -1,0 +1,5 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {checkoutUrl} from '../apps/api/src/billing.ts';
+import {licenseStatus} from '../packages/shared/src/index.ts';
+test('lifetime access has no renewal expiry while disabled or refunded accounts remain blocked',()=>{const u={trialEnd:new Date('2026-10-01T00:00:00Z'),periodEnd:null,disabled:false,subscriptionStatus:'lifetime'};assert.equal(licenseStatus(u,Date.UTC(2100,0,1)).status,'lifetime');assert(licenseStatus(u,Date.UTC(2100,0,1)).premium);assert(!licenseStatus({...u,disabled:true},Date.UTC(2100,0,1)).premium);assert(!licenseStatus({...u,subscriptionStatus:'lifetime-refunded'},Date.UTC(2100,0,1)).premium);});
+test('checkout accepts only HTTPS provider hosts and rejects lookalikes, credentials and ports',()=>{assert(checkoutUrl('https://rzp.io/i/secure'));assert(checkoutUrl('https://razorpay.com/payment'));for(const url of ['https://rzp.io.evil.test/i/pay','http://rzp.io/i/pay','https://evil@rzp.io/i/pay','https://rzp.io:8443/i/pay','javascript:alert(1)'])assert(!checkoutUrl(url));});

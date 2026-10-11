@@ -1,0 +1,3 @@
+import {PrismaClient} from '@prisma/client';
+const email=(process.argv[2]||'').trim().toLowerCase();if(!email||!email.includes('@'))throw Error('Usage: npm run admin:grant -- your-existing-account@email.com');
+const db=new PrismaClient();try{const user=await db.user.findUnique({where:{email}});if(!user)throw Error('Account not found. Create your account in the extension first.');await db.$transaction([db.user.update({where:{id:user.id},data:{admin:true}}),db.audit.create({data:{userId:user.id,action:'admin-granted-locally',target:user.id,result:'Granted by server operator command'}})]);console.log('Admin access granted to',email,'Sign out of the admin panel, then sign in again. Existing password, trial and records are unchanged.');}finally{await db.$disconnect();}

@@ -1,0 +1,2 @@
+import {readFile,writeFile,access} from 'node:fs/promises';import {randomBytes} from 'node:crypto';
+try{await access('.env');console.log('.env already exists; preserved.');}catch{let s=await readFile('.env.example','utf8');s=s.replace('REPLACE_WITH_AT_LEAST_32_RANDOM_CHARACTERS',randomBytes(48).toString('hex')).replace('REPLACE_WITH_64_HEX_CHARACTERS',randomBytes(32).toString('hex'));await writeFile('.env',s,{mode:0o600});console.log('.env created with new local secrets. Review deployment settings before production.');}

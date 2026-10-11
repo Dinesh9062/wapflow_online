@@ -1,0 +1,72 @@
+ZFLEET Connect 1.4.12 — complete Windows update
+
+1. Stop your old API and worker terminals. Keep PostgreSQL/Redis running.
+2. Extract ALL new Source ZIP files into a NEW folder. Copy your ORIGINAL .env
+   into its ZFLEET-Connect root. Keep same database/JWT/encryption keys/keyring.
+   Do not reset the DB or create a replacement account. No new schema migration.
+3. In PowerShell, new root (folder containing package.json):
+
+npm ci
+npm run db:migrate
+npm run check:setup
+npm run typecheck
+npm run build
+npm run dev:api
+
+4. Second terminal, SAME new root:
+
+npm run dev:worker
+
+5. Keep your existing Chrome extension card and existing loaded folder.
+   Replace ALL contents with new apps/extension/dist (or ALL Chrome ZIP files).
+   manifest.json directly in that loaded folder. Reload same card, then refresh
+   WhatsApp. Disable old duplicate cards. Check 1.4.12 / dom-v15 in diagnostics.
+   Supplied Chrome ZIP: http://localhost:4000 API. Hosted API needs a build with
+   your existing ZFLEET_API_ORIGIN. Updating Chrome alone does not update API.
+
+6. Settings > Sending status / Message timing & limits:
+   Quiet hours default OFF. An explicitly saved ON remains ON. If you want
+   sending now, click Turn off quiet hours or uncheck it and Save settings.
+   Contact limit mode defaults to Auto Reply uses rule limits: schedules and
+   reminders share account contact 10 minutes / 3 per day; Auto Reply uses its
+   saved rule contact cooldown/cap. Shared mode keeps the older combined policy.
+   Global gap/day cap and quiet hours still apply to every feature. Limits remain
+   after restart; unsent queued jobs no longer consume caps.
+
+7. Background sending defaults ON (saved OFF is preserved). Settings > Background
+   sending > check Allow sending while another tab/browser/profile is in front > Save.
+   Chrome Settings > Performance > Always keep these sites active > Add web.whatsapp.com.
+   Keep ORIGINAL Chrome profile/window and logged-in WhatsApp tab running. Work in
+   another browser/profile/Gmail as needed; automation does not take window focus.
+   Browser/tab closed, logged out, offline, frozen, or sleeping PC cannot send.
+   Worker pulses approximately every 30 seconds; exact due-second delivery is not promised.
+
+8. Schedule > Repeat > Custom weekdays: select Sun/Mon/Tue/Wed/Thu/Fri/Sat,
+   choose first future date on a selected day, check send authorization > Add to queue.
+   Reschedule restores saved days. Every N days keeps older custom intervals (1-365).
+   Off-day overdue/quota/quiet-hour delays wait for the next selected eligible day.
+   Linked follow-up reminders remain one-time; private task repeat stays separate.
+
+9. Auto Reply: saved verified contact CHECKED in Contact specific rule, response,
+   days/All day, Enabled ON, Save; master Resume; NEW incoming after setup.
+   Background sending ON; original WhatsApp tab open/logged in; empty composer/search. Long-blocked auto replies skip
+   instead of replaying the next morning; use a NEW incoming after eligibility.
+   Read Last incoming check, Recent auto replies and Settings Sending status.
+
+10. Follow-ups > Send reminder opens setup. If asked, tick I confirm intended
+   chat > Verify and continue. Then future time + send authorization > Add to
+   queue creates the outgoing message. Verification alone does not send it.
+   Sent confirms the WhatsApp message; the task stays pending until Done. Private follow-up note/notification
+   alone does not send to the recipient. View reminder shows existing queue.
+   Recipient chat need not stay open; original WhatsApp tab/profile stays open/online/awake.
+   Waiting reason and next eligible check are shown on Schedule/linked reminder.
+   Failed/Unknown: inspect WhatsApp before a confirmed retry.
+
+Prisma missing: npm run db:generate (changing .env does not generate a client).
+Do not regenerate encryption keys or delete Docker volumes to fix this error.
+
+Full report findings, defaults, setup and limitations:
+docs/BACKGROUND_AND_CUSTOM_DAYS_GUIDE.md
+
+14-day account trial and INR 1000 once lifetime plan are unchanged.
+No setting promises that WhatsApp will never restrict an account.

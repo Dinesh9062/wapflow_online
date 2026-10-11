@@ -1,0 +1,8 @@
+{
+  "name": "@zfleet/extension",
+  "version": "1.4.12",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}

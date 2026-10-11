@@ -1,0 +1,12 @@
+{
+  "name": "@zfleet/api",
+  "version": "1.4.12",
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=../../.env --import tsx src/main.ts",
+    "build": "esbuild src/main.ts --bundle --platform=node --format=esm --packages=external --outfile=dist/main.js",
+    "start": "node --env-file=../../.env dist/main.js",
+    "predev": "node ../../scripts/ensure-prisma.mjs",
+    "prestart": "node ../../scripts/ensure-prisma.mjs"
+  }
+}

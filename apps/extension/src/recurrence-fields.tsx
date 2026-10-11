@@ -1,0 +1,9 @@
+import React,{useState} from 'react';
+const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+export function repeatLabel(item:{repeat:string;repeatDays:number;repeatWeekdays?:number[]}){
+ return item.repeat==='weekdays'?`Repeats ${days.filter((_,i)=>item.repeatWeekdays?.includes(i)).join(', ')}`:item.repeat==='custom'?`Every ${item.repeatDays} day${item.repeatDays===1?'':'s'}`:item.repeat==='daily'?'Every day':item.repeat==='weekly'?'Every week':'One-time';
+}
+export function RecurrenceFields({repeat='none',interval=1,weekdays=[],single=false}:{repeat?:string;interval?:number;weekdays?:number[];single?:boolean}){
+ const [mode,setMode]=useState(single?'none':repeat);
+ return <fieldset className="recurrence-fields"><legend>Repeat schedule</legend><label>Repeat<select name="repeat" value={mode} disabled={single} onChange={e=>setMode(e.target.value)}><option value="none">None</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="custom">Every N days</option><option value="weekdays">Custom weekdays</option></select></label>{mode==='custom'?<label>Custom interval (days)<input name="repeatDays" type="number" required min={1} max={365} defaultValue={interval}/><small>For example, 3 repeats every 3 calendar days at the saved local time.</small></label>:<input type="hidden" name="repeatDays" value={interval}/>} {mode==='weekdays'&&<><div className="day-choices" role="group" aria-label="Custom weekdays">{days.map((d,i)=><label key={i}><input name="repeatWeekdays" type="checkbox" value={i} defaultChecked={weekdays.includes(i)}/>{d}</label>)}</div><small>Choose at least one day. The first date must fall on a selected day; repeats use the saved timezone and time.</small></>}{single&&<small>A linked follow-up reminder sends once. Each new task occurrence needs its own authorized message.</small>}</fieldset>;
+}

@@ -1,0 +1,14 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {initialState} from '../packages/shared/src/index.ts';import {deliveryDiagnostics} from '../apps/extension/src/diagnostics.ts';
+test('report includes pending automatic and linked jobs, their exact waits and server counters without message bodies or phone keys',()=>{
+ const contact={key:'default|919000000001@c.us',name:'Private name',type:'individual' as const};
+ const job:any={id:'automatic-id',kind:'auto',contact,body:'PRIVATE message',dueAt:'2026-10-05T18:00:00Z',status:'ready',attempt:0,waitReason:'Quiet hours',waitUntil:'2026-10-06T02:30:00Z'};
+ const state={...structuredClone(initialState),user:{name:'Me',email:'private@test.local'},autoJobs:[job],schedules:[{...job,id:'reminder-id',kind:'scheduled' as const,followupId:'followup-id'}],delivery:{checkedAt:'2026-10-05T18:00:00Z',timezone:'Asia/Kolkata',todayAttempts:3,dailyLimit:50,resetAt:'2026-10-05T18:30:00Z',quietActive:true,quietUntil:job.waitUntil}};
+ const report=deliveryDiagnostics(state,{},true,Date.parse('2026-10-05T18:00:00Z'));
+ assert.equal(report.jobs.length,2);assert.equal(report.configuration.autoStatuses.ready,1);assert.equal(report.jobs.find(j=>j.id==='reminder-id')?.linkedReminder,true);assert.equal(report.delivery?.todayAttempts,3);assert.equal(report.jobs[0].waitReason,'Quiet hours');const text=JSON.stringify(report);for(const privateValue of [contact.key,contact.name,job.body,'private@test.local'])assert(!text.includes(privateValue));
+ assert.equal(report.configuration.deliveryTiming.contactLimitMode,'auto-rule');assert.equal(report.jobs[0].recipientSlot,report.jobs[1].recipientSlot);
+});
+test('reports correlate different recipients and completed reminder/task state without exposing identities',()=>{
+ const state:any=structuredClone(initialState),one={key:'default|PRIVATE_PHONE_ONE',name:'Private One',type:'individual'},two={key:'default|PRIVATE_PHONE_TWO',name:'Private Two',type:'individual'};state.settings.contactLimitMode='shared';state.followups=[{id:'task',status:'pending'}];state.schedules=[{id:'j1',contact:one,followupId:'task',status:'sent',sentAt:'2026-10-06T10:10:00Z',dueAt:'2026-10-06T10:10:00Z'},{id:'j2',contact:two,status:'sent',dueAt:'2026-10-06T10:05:00Z'}];state.autoJobs=[{id:'j3',contact:one,status:'unknown',kind:'auto',dueAt:'2026-10-06T10:11:00Z'}];
+ const report=deliveryDiagnostics(state,{},true);assert.equal(report.configuration.deliveryTiming.contactLimitMode,'shared');assert.equal(report.jobs[0].recipientSlot,report.jobs[2].recipientSlot);assert.notEqual(report.jobs[0].recipientSlot,report.jobs[1].recipientSlot);assert.equal(report.jobs[0].followupStatus,'pending');assert.equal(report.jobs[0].sentAt,'2026-10-06T10:10:00Z');for(const value of [one.key,two.key,one.name,two.name])assert(!JSON.stringify(report).includes(value));
+});

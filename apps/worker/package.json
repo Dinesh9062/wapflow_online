@@ -1,0 +1,9 @@
+{
+  "name": "@zfleet/worker",
+  "version": "1.4.12",
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=../../.env --import tsx src/main.ts",
+    "predev": "node ../../scripts/ensure-prisma.mjs"
+  }
+}

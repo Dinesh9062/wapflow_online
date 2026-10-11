@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String
+  passwordHash String
+  createdAt DateTime @default(now())
+  trialEnd DateTime
+  periodEnd DateTime?
+  subscriptionStatus String @default("trial")
+  providerId String? @unique
+  disabled Boolean @default(false)
+  admin Boolean @default(false)
+  tokenVersion Int @default(0)
+  supportNote String @default("")
+  settings Json @default("{}")
+  followups Followup[]
+  schedules Schedule[]
+  rules AutoRule[]
+  contacts Contact[]
+  conversations Conversation[]
+  devices Device[]
+  audit Audit[]
+  lifetimePayments LifetimePayment[]
+}
+
+model LifetimePayment {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  referenceId String @unique
+  providerId String? @unique
+  providerOrderId String?
+  paymentId String? @unique
+  checkoutUrl String?
+  amount Int @default(100000)
+  currency String @default("INR")
+  status String @default("created")
+  expiresAt DateTime
+  legacyCancelled Boolean @default(false)
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId,createdAt])
+  @@index([providerOrderId])
+}
+model Contact {
+  id String @id @default(uuid())
+  userId String
+  key String
+  name String
+  type String
+  note String @default("")
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@unique([userId,key])
+}
+model Followup {
+  id String @id @default(uuid())
+  userId String
+  data Json
+  dueAt DateTime
+  reminderAt DateTime
+  notified Boolean @default(false)
+  status String @default("pending")
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([status,reminderAt])
+}
+model Schedule {
+  id String @id @default(uuid())
+  userId String
+  data Json
+  dueAt DateTime
+  status String @default("queued")
+  kind String @default("scheduled")
+  contactKey String
+  incomingKey String?
+  ruleId String?
+  idempotencyKey String @unique
+  attempt Int @default(0)
+  leaseToken String?
+  leaseAt DateTime?
+  sentAt DateTime?
+  error String?
+  deviceId String?
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([status,dueAt])
+}
+model AutoRule {
+  id String @id @default(uuid())
+  userId String
+  data Json
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+}
+model Conversation {
+  id String @id @default(uuid())
+  userId String
+  key String
+  lastIncomingKey String?
+  lastIncomingAt DateTime?
+  lastOutgoingAt DateTime?
+  firstSeenAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@unique([userId,key])
+}
+model Device {
+  id String @id
+  userId String
+  version String
+  lastSeen DateTime @default(now())
+  health Json
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId,lastSeen])
+}
+model Audit {
+  id String @id @default(uuid())
+  userId String?
+  action String
+  target String?
+  result String
+  at DateTime @default(now())
+  user User? @relation(fields:[userId],references:[id],onDelete:SetNull)
+}
+model Webhook {
+  id String @id
+  event String
+  providerId String?
+  createdAt DateTime @default(now())
+}
+model FeatureFlag {
+  id String @id @default("global")
+  scheduling Boolean @default(true)
+  autoReply Boolean @default(true)
+}

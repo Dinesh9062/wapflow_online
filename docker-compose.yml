@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: zfleet_connect
+      POSTGRES_USER: zfleet
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_local_password}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["zfleet_pg:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zfleet -d zfleet_connect"]
+      interval: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["zfleet_redis:/data"]
+volumes:
+  zfleet_pg:
+  zfleet_redis:

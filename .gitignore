@@ -1,0 +1,12 @@
+﻿node_modules/
+.env*
+!.env.example
+**/dist/
+*.log
+*.zip
+*.pem
+*.key
+*.dump
+backups/
+artifacts/
+coverage/

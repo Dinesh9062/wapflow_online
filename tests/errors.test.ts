@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {errorResponse,readRecord} from '../apps/api/src/errors.ts';
+import {mergeObservations} from '../apps/extension/src/observation.ts';
+import {featureAccess,initialState} from '../packages/shared/src/index.ts';
+test('database setup errors provide specific recovery instructions without raw secrets',()=>{assert.match(errorResponse({code:'P1000'}).error,/Database login failed/);assert.match(errorResponse({code:'P2021'}).error,/db:migrate/);assert.equal(errorResponse({code:'P1001'}).status,503);assert(!errorResponse({message:'password=secret'}).error.includes('secret'));});
+test('unreadable authored records warn without discarding the stored data or blocking login',()=>{const warnings:string[]=[];assert.equal(readRecord(()=>{throw Error('Unsupported state or unable to authenticate data');},warnings,'Follow-up'),null);assert.match(warnings[0],/original DATA_ENCRYPTION_KEY/);assert.deepEqual(readRecord(()=>({ok:true}),warnings,'Other'),{ok:true});});
+test('management access requires both an authenticated account and current server entitlement',()=>{assert(!featureAccess({...initialState,license:{premium:true} as any}));assert(!featureAccess({...initialState,user:{email:'a',name:'A'}}));assert(featureAccess({...initialState,user:{email:'a',name:'A'},license:{premium:true} as any}));assert(!featureAccess({...initialState,user:{email:'a',name:'A'},license:{premium:false} as any}));});
+
+test('cached row metadata cannot overwrite a newer server reply for Awaiting Reply',()=>{const merged=mergeObservations([{key:'A',lastDirection:'in',lastAt:200}], [{key:'A',lastDirection:'out',lastAt:100,unread:3,self:false}]);assert.equal(merged[0].lastDirection,'in');assert.equal(merged[0].lastAt,200);assert.equal(merged[0].unread,3);});
