@@ -1,4 +1,4 @@
-# ZFLEET Connect 1.4.11 — validation evidence
+# Wapflow Connect 1.4.11 — validation evidence
 
 The saved complete 1.4.10 Source ZIP was materialized and its SHA-256 verified: `13e5eee18c431a46e83cb0d8ad7e37d54db5589cd944b3673db81c405140aff9`. All 114 base files remain present. Full diagnostics(6) and all four 6 October screenshots were reviewed from the supplied local attachments; attachments remain unedited. Native adapter remains 2026.10.05-dom-v14; this release changes delivery policy/status rather than selectors. No real recipient message or payment was sent by these checks.
 

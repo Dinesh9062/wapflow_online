@@ -4,7 +4,7 @@
 
 ## Aapki latest report mein kya mila
 
-Full `ZFLEET_diagnostics(6).json` aur 6 October ke chaar screenshots check kiye gaye. Report 3:42:48 PM IST ki hai:
+Full `Wapflow_diagnostics(6).json` aur 6 October ke chaar screenshots check kiye gaye. Report 3:42:48 PM IST ki hai:
 
 - Linked follow-up WhatsApp reminder **Sent**, due time **3:40 PM IST**, one attempt. Ek ordinary scheduled message bhi Sent, due time 3:35 PM. Private follow-up task abhi pending hai; message send hone se task automatically Done nahi hota.
 - Latest incoming 3:41 PM. Auto Reply ka outcome **delivery-limit / Contact cooldown**, next eligible **3:50:03 PM IST**, aur is contact ko aaj **0/10 auto attempts**. Is incoming ke liye koi auto message queue nahi hua.

@@ -1,10 +1,10 @@
-# ZFLEET Connect 1.4.8 verification
+# Wapflow Connect 1.4.8 verification
 
 05 October 2026. Adapter **2026.10.05-dom-v12**. Exact delivered 1.4.7 source ZIP was SHA256-checked and extracted into a new tree, then fully updated. No selective overlay from an older version.
 
 ## Latest evidence reviewed
 
-Both image(20261005-121428).png and image(20261005-122412).png were viewed at original resolution. Full local ZFLEET_diagnostics(3).json was read. The current attachments were present despite earlier missing-image text.
+Both image(20261005-121428).png and image(20261005-122412).png were viewed at original resolution. Full local Wapflow_diagnostics(3).json was read. The current attachments were present despite earlier missing-image text.
 
 First screenshot: another user is open, Dinesh schedule needs WhatsApp open / saved identity not confirmed, and target lookup says checking saved identity. The visible Verify open chat checkbox belongs to the OTHER chat and is unchecked. Second screenshot: Dinesh is open, the scheduled test text appears in native outgoing, and Contact specific Auto Reply response 20000 is ON/active All day with one-minute cooldown and cap six.
 

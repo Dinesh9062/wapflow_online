@@ -1,0 +1,1 @@
+document.getElementById("open").onclick=async()=>{const t=await chrome.tabs.query({url:"https://web.whatsapp.com/*"});if(t.length)await chrome.tabs.update(t[0].id,{active:true});else await chrome.tabs.create({url:"https://web.whatsapp.com/"});window.close();};

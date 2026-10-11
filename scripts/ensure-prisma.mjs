@@ -28,7 +28,7 @@ async function ensure(){
  }
  try{
   if(await ready()){console.log('Prisma Client: ready.');return;}
-  console.log('Preparing Prisma Client for ZFLEET...');
+  console.log('Preparing Prisma Client for Wapflow...');
   const cli=require.resolve('prisma/build/index.js');
   const result=spawnSync(process.execPath,[cli,'generate','--schema',schema,'--no-hints'],{cwd:root,stdio:'inherit'});
   if(result.error||result.status!==0)throw Error('Prisma generation failed. Run npm run db:generate from the project root and review the error above.');
@@ -36,4 +36,4 @@ async function ensure(){
   console.log('Prisma Client: ready.');
  }finally{await owned.close();await unlink(lock).catch(()=>{});}
 }
-try{await ensure();}catch(error){console.error('ZFLEET setup:',error.message);process.exitCode=1;}
+try{await ensure();}catch(error){console.error('Wapflow setup:',error.message);process.exitCode=1;}

@@ -1,6 +1,6 @@
 > Current release **1.4.12**: see [BACKGROUND_AND_CUSTOM_DAYS_GUIDE.md](BACKGROUND_AND_CUSTOM_DAYS_GUIDE.md) for background sending, Custom weekdays, preserved intervals and complete update steps. Existing numeric limits and saved quiet-hour choices are retained. Earlier release details below are historical.
 
-# ZFLEET Connect API contract
+# Wapflow Connect API contract
 
 Version 1.4.8 adds no HTTP endpoint or schema migration. Native mention-search results stay in the browser, are not indexed as contacts and do not become an account history archive. Existing conversation events continue syncing minimal observed metadata only.
 

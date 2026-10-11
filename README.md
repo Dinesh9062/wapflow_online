@@ -1,4 +1,4 @@
-# ZFLEET Connect WhatsApp Manager
+# Wapflow Connect WhatsApp Manager
 
 WhatsApp Web ke andar filters, follow-ups, reminders, scheduled messages, auto reply aur private notes. Leads, deals, campaigns ya sales pipeline is product mein nahi hain.
 
@@ -6,7 +6,19 @@ This package contains actual extension source and a built Manifest V3 extension,
 
 **Release status:** development build with automated verification. Real logged-in WhatsApp, Chrome restart/notifications, current WhatsApp selectors and live Razorpay still need the manual acceptance checks in `docs/QA_REPORT.md`. It is not a Chrome Web Store release and has not been deployed to your server.
 
-## v1.4.12 update
+## v1.4.13 update — Wapflow Connect
+
+Complete 1.4.12 source updated. Extension, popup, admin, demo and W logo use **Wapflow Connect**. The supplied Chrome ZIP is built for **https://api.wapflow.online**; this release has not been installed on your EC2 server.
+
+Adapter **2026.10.11-dom-v16** separates single-message bodies from broad dated transcript containers, preserves nested opaque markers, reads Unicode/dotted AM/PM clocks and keeps live observation running during continuing DOM mutations. Filter scans reuse unchanged native toolbars and row patches. This addresses the DOM shapes supplied in the Mac report; macOS GUI delivery remains a manual acceptance step.
+
+New schedules show **Verify open WhatsApp chat** directly in the editor. Confirm the intended recipient once per Chrome profile when WhatsApp exposes opaque IDs. Verification remains required before sending, including after background target lookup. Existing ambiguity, draft, account and duplicate-send checks remain enforced.
+
+**Awaiting Reply shows** now lets you choose their reply (last message sent; default and older behavior) or your reply (last message received). Reading does not count as replying. Settings uses **Your mention name**, with no Dinesh example. The top switch explicitly says **Auto replies paused/on**; a readiness card explains enabled rules, verified recipients and private follow-up vs outgoing reminder.
+
+Use Source + Chrome **1.4.13 together**. Keep your original `.env`, database, encryption keys and existing Chrome extension card. Workspace/storage identifiers remain compatible. No new schema migration. Start with **INSTALL_UPDATE.txt** and **[MACBOOK_AND_RELEASE_GUIDE.md](docs/MACBOOK_AND_RELEASE_GUIDE.md)**. Earlier release sections are historical.
+
+## Previous v1.4.12 update
 
 Complete 1.4.11 source updated; native adapter **2026.10.06-dom-v15**. **Background sending defaults ON**: a running, logged-in WhatsApp tab can process schedules, linked follow-up reminders and fresh matching Auto Replies while another tab, Chrome profile, browser or app is in front. Automation does not focus the tab/window. The original WhatsApp profile/tab must remain open, online and awake; closed/frozen/discarded sessions cannot send.
 
@@ -46,7 +58,7 @@ Use the complete new source with your **ORIGINAL .env**, same database/keys/acco
 
 ## Optional offline demo
 
-`ZFLEET_Connect_Demo.html` ko Chrome mein open karein. Dummy chats par Follow-ups, Schedule, Auto Reply, Notes, Settings aur Subscription screens test kar sakte hain. Follow-up add/edit/snooze/done, scheduled queue create/cancel, rules create/edit/toggle aur settings demo mein persist hote hain.
+`Wapflow_Connect_Demo.html` ko Chrome mein open karein. Dummy chats par Follow-ups, Schedule, Auto Reply, Notes, Settings aur Subscription screens test kar sakte hain. Follow-up add/edit/snooze/done, scheduled queue create/cancel, rules create/edit/toggle aur settings demo mein persist hote hain.
 
 Demo real WhatsApp ko connect nahi karta aur message send nahi karta. Iske trial/paid status sirf demo data hain. Extension ka actual trial backend control karta hai.
 
@@ -96,7 +108,7 @@ The supplied `apps/extension/dist` folder is built for `http://localhost:4000`.
 2. **Developer mode** ON karein.
 3. **Load unpacked** par click karke `apps/extension/dist` select karein. Select the folder that contains `manifest.json`.
 4. `https://web.whatsapp.com/` reload karein. Apne phone se normal WhatsApp login complete karein.
-5. Right rail mein **Subscription** ya **Settings** open karke ZFLEET account register/sign in karein.
+5. Right rail mein **Subscription** ya **Settings** open karke Wapflow account register/sign in karein.
 6. A WhatsApp contact open karein. Extension reads the header name with or without its title attribute, and verifies native JIDs automatically, or offers explicit visible-message verification for opaque IDs. Quoted IDs are ignored. Within an authenticated active trial, a recognized chat supports manual follow-ups/private notes; scheduling and auto sends require native JID or confirmed visible-message verification.
 7. Add a follow-up. Reminder, repeat and priority select karein. Schedule ke liye message, future date/time and send consent choose karein.
 8. Auto Reply default paused rahega. Rule create/enable karein, selected days/time set karein, phir master Resume use karein.

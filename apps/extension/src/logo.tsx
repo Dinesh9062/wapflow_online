@@ -1,0 +1,2 @@
+import React from 'react';
+export function WapflowMark(){return <svg role="img" aria-label="Wapflow Connect logo" viewBox="0 0 128 128" width="42" height="42"><rect x="4" y="4" width="120" height="112" rx="28" fill="#00a884"/><path d="M27 108v17l23-17" fill="#00a884"/><path d="M27 34l14 51 23-37 23 37 14-51" fill="none" stroke="white" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round"/></svg>;}

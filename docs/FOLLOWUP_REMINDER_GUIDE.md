@@ -4,7 +4,7 @@
 
 ## Aapki latest report mein kya tha
 
-05 October ki teen screenshots aur full ZFLEET_diagnostics(4).json review kiya. Extension 1.4.8/dom-v12, account signed in/premium, one saved verification, 13 Sent schedules aur one cancelled schedule the. Sumit Jind Office follow-up ke Send reminder par target verification warning aa rahi thi. Follow-ups panel mein verification controls nahi the. Follow-up ke purane local ID aur current saved identity alag hone par resolver bhi target miss karta tha. Yeh queue mein message create hone se pehle ka failure tha; report healthy scheduled sending dikhati hai.
+05 October ki teen screenshots aur full Wapflow_diagnostics(4).json review kiya. Extension 1.4.8/dom-v12, account signed in/premium, one saved verification, 13 Sent schedules aur one cancelled schedule the. Sumit Jind Office follow-up ke Send reminder par target verification warning aa rahi thi. Follow-ups panel mein verification controls nahi the. Follow-up ke purane local ID aur current saved identity alag hone par resolver bhi target miss karta tha. Yeh queue mein message create hone se pehle ka failure tha; report healthy scheduled sending dikhati hai.
 
 Auto Reply report ka `cooldown-or-daily-cap` ek limit result hai, offline/server failure nahi. Unread 118 aur Groups 12 native counts the. Chat directory scan user interaction par stop hua tha; 37 partial names kept the. Yeh intentional stop hai: refresh ke liye Chat list use karein jab setup complete karna ho.
 

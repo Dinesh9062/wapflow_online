@@ -1,38 +1,40 @@
-# ZFLEET Connect 1.4.12 — validation evidence
+# Wapflow Connect 1.4.13 — verification evidence
 
-The saved complete 1.4.11 Source ZIP was verified against SHA-256 `1a8d24e095b57598b5a95a9dad03388973829092b66f9ad87248369bbec3a479` and extracted into an isolated update tree. All 116 base files remain present. Both 6 October background/profile screenshots supplied in this request were visually inspected from local attachment paths and remain unedited. Native adapter is 2026.10.06-dom-v15. No real contact message or payment was sent.
+Date: 11 October 2026. Baseline is the exact uploaded 1.4.12 Source ZIP, SHA-256 `e7c833348c29887d64b949aad03048bfe29382a66b398b11e082eac8911bdd7b`. The supplied JSON and both screenshots were read locally. Source files are retained; old generated demo/hashed admin assets are replaced by the renamed demo and current build assets. No actual contact message, payment or EC2 deployment was performed.
 
-## Results
+## Completed checks
 
 | Check | Result |
 |---|---|
-| Main engine / native DOM / bundled content / worker background / React UI | 232 passed; zero failures/skips |
-| Actual HTTP API with isolated PostgreSQL-compatible databases | 39 passed; zero failures/skips |
-| Actual Redis/BullMQ worker | 1 passed; zero failures/skips |
-| Total | **272 passed** |
-| Strict TypeScript | Passed on release and final clean-install source |
-| Extension, admin, API and standalone demo production build | Passed on release and clean installation |
-| Clean npm ci and postinstall Prisma generation | 328 packages; Prisma 6.19.3 |
-| Release vs clean production output | All 13 production files byte-identical |
-| Dependency lock comparison against supplied base | Third-party entries unchanged; only six owned versions changed to 1.4.12 |
+| Engine/native DOM/content/background/React UI regression suite | 243 passed, zero failures/skips |
+| Actual HTTP API/Prisma/PostgreSQL-protocol integration | 39 passed, zero failures/skips |
+| Actual isolated Redis 7.0.15/BullMQ scheduler | 1 passed, zero failures/skips |
+| Total | **283 passed** |
+| Strict TypeScript | Passed on working source and a fresh ZIP extraction |
+| Production Chrome extension, admin, API and standalone demo | Passed; API compiled to https://api.wapflow.online |
+| Clean ZIP installation | npm ci / Prisma generation / typecheck / production build passed |
+| Clean build reproducibility | All 8 extension, 3 admin and 1 API build files byte-identical |
+| Dependency audit | Zero reported vulnerabilities |
+| Prisma generation | 6.19.3, retained with compatible existing schema/migrations |
 
-Clean installation used existing matching-version Prisma engines through supported engine-path environment variables because this environment restricts binary downloads. No such environment paths are baked into the project, user scripts or .env.example. This is not an unrestricted fresh Windows download test.
+Runtime: Node 24.19.0, npm 11.9.0, Ubuntu test container. PostgreSQL-protocol integration uses isolated PGlite databases. Worker testing uses a real isolated Redis process and cleans it up; it does not use your EC2 data. The scoped `@prisma/config` override pins `deepmerge-ts` 8.0.0; Prisma/client 6.19.3 remain aligned. No force-major upgrade.
 
-## New regression evidence
+## Regression evidence
 
-- Actual bundled content, background queue and native DOM fixtures operate with visibilityState hidden and hasFocus false. A matching NEW incoming queues and sends an Auto Reply while another recipient is open. Content interval scans and MutationObserver scanning are disabled in the pulse-only fixture: the worker alarm still discovers the new incoming. Startup unread/old history do not replay.
-- The integrated React follow-up form creates an individually authorized linked reminder for its frozen intended recipient, switches to a different WhatsApp chat, locates the offscreen recipient, confirms one native outgoing, completes Sent and leaves the private task pending. Hidden/unfocused variation artificially delays legacy 100ms timer polling to 30 seconds and disables interval polling; DOM-event target/send confirmation still works.
-- Native drafts remain intact and block hidden sends until cleared. Background sending OFF blocks hidden navigation/send, remains OFF through the settings form, and retains foreground behavior. Unsupported non-boolean API settings are rejected. Missing older values default ON.
-- Pending automation pulses and protects only connected owned background-enabled tabs. The worker sets autoDiscardable false without activating a tab or focusing a window; turning background mode OFF restores prior discardability. Frozen tabs are not messaged/leased; a resumed tab sends once. A malformed post-lease delivery response becomes Unknown and is not blindly retried.
-- Actual Schedule forms expose seven weekday checkboxes only in Custom weekdays, reject empty selection, persist selected days and restore them through Reschedule. Every N days exposes a 1–365 interval, displays the saved interval and preserves legacy custom semantics. Existing form behavior was retained; the first fixture used the wrong existing button label Edit, corrected to Reschedule.
-- Shared recurrence checks cover weekday selections, saved timezone/wall time, daylight-saving transitions, missed backlog and invalid first dates. Readiness and final claim compose weekday selection with global/contact caps and quiet hours, preventing an overdue or deferred job sending on an unselected day.
-- Actual HTTP/API/Prisma creates/edits a weekday record, rejects missing days/wrong first date, completes once and creates exactly one correctly timed next occurrence with unchanged body/day selection. Duplicate completion is rejected. An overdue off-day row advertises its selected next time, rejects direct claim and consumes zero attempts.
-- Anonymous diagnostics include background configuration and weekday recurrence; contact keys/names, bodies and account email remain omitted from job summaries.
+- Mac-shaped fourteen-body dated transcript with nested selectable text and opaque IDs produces fourteen unique messages, correct alternating direction, sender/time and latest outgoing Awaiting state. Explicit verification keeps fourteen markers without requiring serialized JIDs.
+- Same shape retains an observed incoming mention across reads and clears it after a later outgoing reply. Unicode isolation/narrow spaces and dotted AM/PM parse in the configured timezone.
+- A saved opaque Mac-shaped target opens from another conversation and confirms the outgoing reminder exactly once; wrong recipient/manual draft/ambiguous identity guards remain covered.
+- Continuous native mutations deliver fresh observations before the mutation stream ends. Identical Mentions updates preserve the same native toolbar instead of repeatedly reconstructing it. Pending changes, nested scrolling and native row style changes invalidate the cache correctly.
+- Actual React schedule editor requires intended-recipient confirmation, verifies in place and queues that target. Switching to another verified chat cannot bypass verification of the original unverified recipient.
+- Awaiting Reply supports backward-compatible outgoing default and optional incoming mode; grace, self-chat and reply direction checks apply. Actual settings form and HTTP persistence preserve the choice and reject an invalid value.
+- Existing integration coverage still includes hidden/unfocused target preparation, automatic unread observation, drafts/search preservation, group reminder recipient handling, notifications, task Done/history, stale auto expiry, server quotas/quiet windows, owner namespaces, entitlement and billing idempotency.
 
-Existing mentions, Awaiting Reply, filters, native offscreen target verification, manual search/input ownership, group subject/recipient separation, owner changes, burst incoming cancellation, entitlement, lifetime billing, setup/Prisma recovery, notifications and duplicate/Unknown handling remain covered and passing. Prior detailed evidence is retained in QA_REPORT_v1_4_11.md and earlier archives.
+## Report interpretation
 
-## Installed acceptance and limits
+Mac heartbeat: opaque IDs and unverified target; broad dated envelope with fourteen text bodies. Downloaded JSON: master autoPaused, no enabled rule, no bindings, no queued schedules/linked reminders and no open-chat snapshot. These require setup on the affected Chrome profile. Empty-composer `sendButton=false` and zero serialized IDs are not independently send failures. The snapshot alone does not establish every reported failure's cause.
 
-Use Source + Chrome 1.4.12 together, original .env/database/secrets and the same Chrome card. See INSTALL_UPDATE.txt and BACKGROUND_AND_CUSTOM_DAYS_GUIDE.md. Keep Background sending ON, original WhatsApp tab/profile running/logged in/online, native composer/search empty, desktop awake and the recipient verified. Add web.whatsapp.com to Chrome Performance → Always keep these sites active. Test one consenting recipient while another profile/browser remains in front; inspect actual outgoing and Sent without creating duplicate jobs. Auto Reply requires a NEW incoming after enabled rule/master Resume setup.
+## Acceptance still required
 
-These are controlled JSDOM/native DOM, actual API/Prisma/PostgreSQL-protocol and Redis/BullMQ checks. This environment has no runnable Chrome/Chromium binary; no real Chrome GUI, live logged-in Windows WhatsApp delivery, profile/window lifecycle or OS notification acceptance is claimed. Frozen/discarded/closed/logged-out sessions and sleeping/offline computers cannot send with this DOM extension. Alarm scheduling can be delayed; exact due-second delivery, cloud/browser-closed sending, live merchant payments, unrestricted network installation and protection from account restrictions are not certified.
+Actual macOS/Windows Chrome GUI delivery, OS notification permission/Focus, real WhatsApp layout variants and live merchant payment need installed acceptance. These tests do not prove the extension works on every MacBook or guarantee no hangs. Follow INSTALL_UPDATE.txt and MACBOOK_AND_RELEASE_GUIDE.md, using one consenting recipient and observing the actual outgoing plus Sent while another chat is open. Keep the logged-in Chrome profile/tab open, online and awake. Closed/frozen/discarded/sleeping sessions cannot send via this DOM extension. No exact due-second delivery or protection from WhatsApp restrictions is certified.
+
+Preserve original `.env`, database, JWT/encryption keys and Chrome storage. Source and Chrome must both be 1.4.13; adapter 2026.10.11-dom-v16. No new schema migration. Historical 1.4.12 evidence is retained in QA_REPORT_v1_4_12.md.

@@ -1,6 +1,6 @@
 {
   "name": "@zfleet/shared",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "type": "module",
   "exports": "./src/index.ts"
 }

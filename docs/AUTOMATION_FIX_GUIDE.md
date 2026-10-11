@@ -4,7 +4,7 @@
 
 # Auto Reply / Schedule / Send reminder fix — v1.4.8
 
-Latest two screenshots aur ZFLEET_diagnostics(3).json reviewed. Rule “Message acknowledgement” ON hai, Contact specific hai, response `20000`, All day / Asia-Kolkata, cooldown 1 minute, daily cap 6. Is rule ko recreate karna ya account reset karna zaroori nahi.
+Latest two screenshots aur Wapflow_diagnostics(3).json reviewed. Rule “Message acknowledgement” ON hai, Contact specific hai, response `20000`, All day / Asia-Kolkata, cooldown 1 minute, daily cap 6. Is rule ko recreate karna ya account reset karna zaroori nahi.
 
 ## Kya fix hua
 

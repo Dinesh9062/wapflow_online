@@ -14,4 +14,4 @@ const worker=new Worker('zfleet-due',async()=>{
 },{connection,concurrency:1});
 worker.on('failed',(job,error)=>console.error('Scheduler failure',{job:job?.id,message:error.message}));
 for(const signal of ['SIGINT','SIGTERM'])process.on(signal,async()=>{await worker.close();await queue.close();connection.disconnect();await db.$disconnect();process.exit(0);});
-console.log('ZFLEET scheduler active');
+console.log('Wapflow scheduler active');

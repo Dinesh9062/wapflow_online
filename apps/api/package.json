@@ -1,6 +1,6 @@
 {
   "name": "@zfleet/api",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "type": "module",
   "scripts": {
     "dev": "node --env-file=../../.env --import tsx src/main.ts",

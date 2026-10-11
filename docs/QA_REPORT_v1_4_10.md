@@ -1,6 +1,6 @@
-# ZFLEET Connect 1.4.10 — validation evidence
+# Wapflow Connect 1.4.10 — validation evidence
 
-Full saved 1.4.9 source was materialized and its SHA-256 verified before changes. The complete `ZFLEET_diagnostics(5).json` was reviewed. Current adapter: 2026.10.05-dom-v14. No real contact message or payment was sent by these checks.
+Full saved 1.4.9 source was materialized and its SHA-256 verified before changes. The complete `Wapflow_diagnostics(5).json` was reviewed. Current adapter: 2026.10.05-dom-v14. No real contact message or payment was sent by these checks.
 
 ## Results
 

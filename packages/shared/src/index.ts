@@ -20,8 +20,8 @@ export type Followup = z.infer<typeof followupSchema>&{id:string;status:'pending
 export type ScheduleStatus = 'queued'|'ready'|'sending'|'sent'|'failed'|'needs-whatsapp-open'|'cancelled'|'unknown';
 export type Schedule = z.infer<typeof scheduleSchema>&{id:string;status:ScheduleStatus;sentAt?:string;error?:string;kind?:'scheduled'|'auto';incomingKey?:string;attempt?:number;waitReason?:string;waitReasons?:string[];waitUntil?:string;expiresAt?:string};
 export type Rule = z.infer<typeof ruleSchema>&{id:string};
-export type Settings = Partial<DeliverySettings>&{timezone:string;graceMinutes:number;notifications:boolean;autoPaused:boolean;excludedKeys:string[];workingStart:string;workingEnd:string;workingDays:number[];apiUrl:string;accountNamespace:string;ownPhone?:string;dateOrder?:'DMY'|'MDY';autoReadUnread?:boolean;mentionAliases?:string[]};
-export const defaultSettings:Settings={...defaultDeliverySettings,timezone:'Asia/Kolkata',graceMinutes:30,notifications:true,autoPaused:true,excludedKeys:[],workingStart:'09:00',workingEnd:'18:00',workingDays:[1,2,3,4,5],apiUrl:'http://localhost:4000',accountNamespace:'default',dateOrder:'DMY',ownPhone:'',autoReadUnread:true,mentionAliases:[]};
+export type Settings = Partial<DeliverySettings>&{timezone:string;graceMinutes:number;awaitingReplyMode?:'outgoing'|'incoming';notifications:boolean;autoPaused:boolean;excludedKeys:string[];workingStart:string;workingEnd:string;workingDays:number[];apiUrl:string;accountNamespace:string;ownPhone?:string;dateOrder?:'DMY'|'MDY';autoReadUnread?:boolean;mentionAliases?:string[]};
+export const defaultSettings:Settings={...defaultDeliverySettings,timezone:'Asia/Kolkata',graceMinutes:30,awaitingReplyMode:'outgoing',notifications:true,autoPaused:true,excludedKeys:[],workingStart:'09:00',workingEnd:'18:00',workingDays:[1,2,3,4,5],apiUrl:'http://localhost:4000',accountNamespace:'default',dateOrder:'DMY',ownPhone:'',autoReadUnread:true,mentionAliases:[]};
 export type License = {premium:boolean;status:string;trialEnd:string;daysLeft:number;price:number};
 export type ConversationBinding={key:string;name:string;type:Chat['type'];messageIds:string[]};
 export const freeFilters:readonly Filter[]=['All','Unread','Chats','Groups'];
@@ -41,7 +41,7 @@ export function matchesFilter(c:Chat,f:Filter,s:State,now=Date.now()):boolean {
  if(f==='Chats')return c.type==='individual';
  if(f==='Groups')return c.type==='group';
  if(f==='Mentions')return c.mention;
- if(f==='Awaiting Reply')return !c.self&&c.lastDirection==='out'&&c.lastAt>0&&now-c.lastAt>=s.settings.graceMinutes*60000;
+ if(f==='Awaiting Reply')return !c.self&&c.lastDirection===(s.settings.awaitingReplyMode==='incoming'?'in':'out')&&c.lastAt>0&&now-c.lastAt>=s.settings.graceMinutes*60000;
  if(f==='Follow-ups')return s.followups.some(x=>recordMatches(c,x.contact)&&['pending','snoozed'].includes(x.status));
  return s.schedules.some(x=>recordMatches(c,x.contact)&&['queued','ready','sending','needs-whatsapp-open','failed','unknown'].includes(x.status));
 }

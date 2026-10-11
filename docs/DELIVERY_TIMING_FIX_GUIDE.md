@@ -4,7 +4,7 @@
 
 ## Latest report ka result
 
-`ZFLEET_diagnostics(5).json` mein extension 1.4.9/dom-v13, signed-in/premium account, one active auto rule, 3 saved bindings aur complete 487-name directory hai. Last incoming check ka actual reason `cooldown-or-daily-cap` hai. Incoming time 05 October 2026 11:19 PM IST tha. Quiet hours ON, 22:00–08:00 hain: account timezone Asia/Kolkata ho to is time sending blocked hoti hai. Purane report mein timezone/attempt counters nahi the, isliye usse exact rule usage prove nahi hoti.
+`Wapflow_diagnostics(5).json` mein extension 1.4.9/dom-v13, signed-in/premium account, one active auto rule, 3 saved bindings aur complete 487-name directory hai. Last incoming check ka actual reason `cooldown-or-daily-cap` hai. Incoming time 05 October 2026 11:19 PM IST tha. Quiet hours ON, 22:00–08:00 hain: account timezone Asia/Kolkata ho to is time sending blocked hoti hai. Purane report mein timezone/attempt counters nahi the, isliye usse exact rule usage prove nahi hoti.
 
 Report mein **zero pending follow-ups, zero linked outgoing reminders**, aur scheduled history **13 sent / 2 cancelled** hai. Koi pending scheduled job is snapshot mein nahi hai. Empty composer par Send button absent hona normal hai; isse send selector broken prove nahi hota.
 

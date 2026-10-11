@@ -21,7 +21,7 @@ export function nativeFilterButton(mode:Native){
 type Patch={node:HTMLElement;property:string;value:string;priority:string;applied:string};
 /** Filters WhatsApp's actual row elements. Never copies chats or opens another inbox. */
 export class NativeFilters {
- private filter:Filter='All';private state?:State;private chats:Chat[]=[];private patches:Patch[]=[];private generation=0;private groupNames=new Set<string>();private nativeMode:Native='All';private strip?:HTMLElement;private notice='';private probing=false;private namespace='';
+ private appliedSignature='';private appliedRows:HTMLElement[]=[];private filter:Filter='All';private state?:State;private chats:Chat[]=[];private patches:Patch[]=[];private generation=0;private groupNames=new Set<string>();private nativeMode:Native='All';private strip?:HTMLElement;private notice='';private probing=false;private namespace='';
  private scrollTimer?:ReturnType<typeof setTimeout>;
  private groupReady=false;private groupObserver?:MutationObserver;
  private selectedButton?:HTMLElement;private directoryActive=false;private mentionMode:'all'|'pending'='all';private mentionSearch:NativeMentionSearch;private indexedChats:Chat[]=[];
@@ -36,7 +36,7 @@ export class NativeFilters {
  private rows(){return [...document.querySelectorAll<HTMLElement>(SelectorRegistry.rows)].filter(r=>!r.parentElement?.closest('[role="row"],[role="listitem"]'));}
  private rememberGroups(){if(this.nativeMode==='Groups'&&this.groupReady&&!this.probing)for(const row of this.rows()){const name=rowName(row);if(name)this.groupNames.add(name);}}
  annotate(chats:Chat[]){this.rememberGroups();for(const c of chats)if(c.type==='unknown'&&chats.filter(x=>x.name===c.name).length===1&&this.groupNames.has(c.name))c.type='group';return chats;}
- async select(filter:Filter,state:State,chats:Chat[]){if(this.namespace!==state.settings.accountNamespace){this.namespace=state.settings.accountNamespace;this.groupNames.clear();}const token=++this.generation;const changed=filter!==this.filter;this.filter=filter;this.state=state;this.chats=chats;this.notice='';this.restore();
+ async select(filter:Filter,state:State,chats:Chat[]){if(this.namespace!==state.settings.accountNamespace){this.namespace=state.settings.accountNamespace;this.groupNames.clear();}const token=++this.generation;const changed=filter!==this.filter;this.filter=filter;this.state=state;this.chats=chats;if(changed){this.notice='';this.restore();}
   if(filter!=='Mentions'||this.mentionMode==='pending')this.mentionSearch.stop();
   if(filter==='Mentions'&&this.mentionMode==='all'){if(changed&&this.nativeMode!=='All'){this.native('All');await new Promise(r=>setTimeout(r,350));if(token!==this.generation)return;}this.mentionSearch.start(state.settings);this.changed();this.apply();return;}
   if(['All','Unread','Groups'].includes(filter)&&this.native(filter as Native)){this.changed();return;}
@@ -53,10 +53,18 @@ export class NativeFilters {
  update(chats:Chat[],indexed:Chat[]=chats){this.chats=this.annotate(chats);this.indexedChats=indexed;this.apply();}
  async revealTarget(){if(this.filter==='All'&&this.nativeMode==='All')return;this.report('All');if(this.state)await this.select('All',this.state,this.chats);else{this.generation++;this.filter='All';this.restore();this.native('All');}await new Promise(r=>setTimeout(r,350));}
  private patch(node:HTMLElement,property:string,value:string){this.patches.push({node,property,value:node.style.getPropertyValue(property),priority:node.style.getPropertyPriority(property),applied:value});node.style.setProperty(property,value,'important');}
- private restore(){for(const p of this.patches){if(p.node.style.getPropertyValue(p.property)!==p.applied)continue;if(p.value)p.node.style.setProperty(p.property,p.value,p.priority);else p.node.style.removeProperty(p.property);}this.patches=[];this.strip?.remove();this.strip=undefined;}
+ private restore(){this.appliedSignature='';this.appliedRows=[];for(const p of this.patches){if(p.node.style.getPropertyValue(p.property)!==p.applied)continue;if(p.value)p.node.style.setProperty(p.property,p.value,p.priority);else p.node.style.removeProperty(p.property);}this.patches=[];this.strip?.remove();this.strip=undefined;}
  private wrapper(row:HTMLElement,pane:HTMLElement){let node=row;while(node.parentElement&&node.parentElement!==pane){if(node.style.position==='absolute'||node.style.transform.includes('translate'))return node;const parent=node.parentElement;if(parent.matches('[role="grid"],[role="list"], [role="tree"]'))break;node=parent;}return row;}
  private scrollHost(first:HTMLElement,pane:HTMLElement){for(let node:HTMLElement|null=first.parentElement;node&&pane.contains(node);node=node.parentElement){const overflow=node.ownerDocument.defaultView?.getComputedStyle(node).overflowY;if(node.scrollTop||node.scrollHeight>node.clientHeight&&node.clientHeight>0||overflow==='auto'||overflow==='scroll')return node;}return pane;}
- private apply(){this.restore();if(!this.state)return;if(this.filter==='Mentions'&&this.mentionMode==='all'&&!this.mentionSearch.active&&this.mentionSearch.options.length){this.mentionToolbar(0);return;}if(['All','Unread','Groups'].includes(this.filter)&&this.button(this.filter as Native))return;if(this.filter==='All')return;const pane=this.pane();if(!pane)return;
+ private apply(){
+  if(this.directoryActive||!this.state)return;
+  const liveRows=this.rows(),paneNow=this.pane(),scrollTop=paneNow&&liveRows[0]?this.scrollHost(this.wrapper(liveRows[0],paneNow),paneNow).scrollTop:paneNow?.scrollTop,signature=JSON.stringify([this.filter,this.mentionMode,this.mentionSearch.active,this.mentionSearch.current()?.id,this.mentionSearch.status,this.state.settings.graceMinutes,this.state.settings.awaitingReplyMode,liveRows.map(row=>[rowName(row),row.textContent]),this.chats.map(c=>[c.key,c.name,c.type,c.unread,c.mention,c.self,c.lastDirection,c.lastAt,c.snoozedUntil,matchesFilter(c,this.filter,this.state!)]),this.indexedChats.map(c=>[c.key,c.name,c.type,c.unread,c.mention,c.self,c.lastDirection,c.lastAt,c.snoozedUntil,matchesFilter(c,this.filter,this.state!)]),this.state.followups.map(f=>[f.id,f.contact.key,f.contact.name,f.status]),this.state.schedules.map(j=>[j.id,j.contact.key,j.contact.name,j.status]),scrollTop]);
+  // Avoid recreating a sticky toolbar and changing virtualized rows on every DOM heartbeat.
+  // Eligibility changes invalidate the cache when grace/snooze deadlines pass.
+  const stableSignature=signature;
+  if(!this.patches.some(p=>p.node.isConnected&&p.node.style.getPropertyValue(p.property)!==p.applied)&&this.appliedSignature===stableSignature&&liveRows.length===this.appliedRows.length&&liveRows.every((r,i)=>r===this.appliedRows[i])&&(!this.strip||this.strip.isConnected))return;
+  this.restore();this.appliedSignature=stableSignature;this.appliedRows=liveRows;
+if(this.filter==='Mentions'&&this.mentionMode==='all'&&!this.mentionSearch.active&&this.mentionSearch.options.length){this.mentionToolbar(0);return;}if(['All','Unread','Groups'].includes(this.filter)&&this.button(this.filter as Native))return;if(this.filter==='All')return;const pane=this.pane();if(!pane)return;
   const rows=this.rows(),counts=new Map<string,number>();for(const r of rows){const n=rowName(r);counts.set(n,(counts.get(n)||0)+1);}
   let matches=0;const wrappers=rows.map(row=>this.wrapper(row,pane));const first=wrappers[0];const scroll=first?this.scrollHost(first,pane):pane;const rect=first?.getBoundingClientRect();const base=first?Number(first.style.transform.match(/translateY\(([-\d.]+)px\)/)?.[1]||first.style.transform.match(/translate(?:3d)?\([^,]+,\s*([-\d.]+)px/)?.[1]||0)+(parseFloat(first.style.top)||0):0;
   // Anchor matches at the actual viewport, not at an overscanned row above it.
@@ -73,7 +81,7 @@ export class NativeFilters {
   if(this.filter==='Mentions'){this.mentionToolbar(matches);return;}
   this.notice='WhatsApp ki loaded chat list par filter laga hai. Aur chats load karne ke liye list scroll karein.';
   const strip=document.createElement('div');strip.dataset.zfleetOwned='true';strip.style.cssText='position:sticky;top:0;z-index:5;padding:8px 12px;background:var(--panel-background,#fff);color:var(--primary,#111b21);font:12px system-ui;display:flex;gap:8px;align-items:center';
-  const label=document.createElement('span');label.textContent=`${this.filter} · ${matches} matching / ${rows.length} loaded chats${this.filter==='Awaiting Reply'?' · Your last message sent; grace '+this.state.settings.graceMinutes+' min':!matches?' · No loaded matches':''}`;label.style.flex='1';strip.append(label);
+  const label=document.createElement('span');label.textContent=`${this.filter} · ${matches} matching / ${rows.length} loaded chats${this.filter==='Awaiting Reply'?(this.state.settings.awaitingReplyMode==='incoming'?' · Incoming message needs your reply':' · Your sent message awaits their reply')+'; grace '+this.state.settings.graceMinutes+' min':!matches?' · No loaded matches':''}`;label.style.flex='1';strip.append(label);
   const clear=document.createElement('button');clear.textContent='All chats';clear.style.cssText='border:0;background:transparent;color:#00a884;cursor:pointer';clear.onclick=()=>this.report('All');strip.append(clear);pane.prepend(strip);this.strip=strip;
   this.notice='WhatsApp ki loaded chat list par filter laga hai. Aur chats load karne ke liye list scroll karein.';
  }

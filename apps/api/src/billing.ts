@@ -14,7 +14,7 @@ export async function createLifetimePayment(db:PrismaClient,provider:Provider,u:
   let row=await tx.lifetimePayment.findFirst({where:{userId:u.id,status:'created',expiresAt:{gt:new Date(Date.now()+60000)}},orderBy:{createdAt:'desc'}});
   if(row?.checkoutUrl&&checkoutUrl(row.checkoutUrl))return {paymentId:row.id,checkoutUrl:row.checkoutUrl,amount:1000,currency:'INR',plan:'lifetime'};
   if(!row)row=await tx.lifetimePayment.create({data:{userId:u.id,referenceId:randomUUID(),expiresAt:new Date(Date.now()+86400000)}});
-  const link=await provider('/payment_links',{amount:100000,currency:'INR',accept_partial:false,reference_id:row.referenceId,expire_by:Math.floor(row.expiresAt.getTime()/1000),description:'ZFLEET Connect lifetime access — one-time ₹1,000',notify:{sms:false,email:false},reminder_enable:false,notes:{user_id:u.id,reference_id:row.referenceId,plan:'lifetime'}});
+  const link=await provider('/payment_links',{amount:100000,currency:'INR',accept_partial:false,reference_id:row.referenceId,expire_by:Math.floor(row.expiresAt.getTime()/1000),description:'Wapflow Connect lifetime access — one-time ₹1,000',notify:{sms:false,email:false},reminder_enable:false,notes:{user_id:u.id,reference_id:row.referenceId,plan:'lifetime'}});
   if(!/^plink_[A-Za-z0-9]+$/.test(link.id||'')||link.amount!==100000||link.currency!=='INR'||link.reference_id!==row.referenceId||!checkoutUrl(link.short_url))throw fail('Payment provider returned an invalid checkout',502);
   await tx.lifetimePayment.update({where:{id:row.id},data:{providerId:link.id,providerOrderId:link.order_id||null,checkoutUrl:link.short_url}});
   await tx.audit.create({data:{userId:u.id,action:'lifetime-checkout-created',target:link.id,result:'INR 1000 once'}});

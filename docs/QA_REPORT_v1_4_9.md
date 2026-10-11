@@ -1,10 +1,10 @@
-# ZFLEET Connect 1.4.9 verification
+# Wapflow Connect 1.4.9 verification
 
 05 October 2026. Adapter **2026.10.05-dom-v13**. The delivered 1.4.8 Source ZIP was SHA256-checked (`7e38712f923ec93f68a41949a8952ceb90c634b52e479d75fd231ec1774d661b`) and extracted into a new working tree. Complete source updated; no selective old/new overlay.
 
 ## Latest evidence
 
-All three supplied local images image(20261005-144639).png, image(20261005-144646).png and image(20261005-144818).png were viewed. Full local ZFLEET_diagnostics(4).json was read. The files existed despite the earlier missing-image notices.
+All three supplied local images image(20261005-144639).png, image(20261005-144646).png and image(20261005-144818).png were viewed. Full local Wapflow_diagnostics(4).json was read. The files existed despite the earlier missing-image notices.
 
 Screenshots: Sumit Jind Office follow-up, current unverified Sumit chat, Send reminder displays an open/verify warning and a separate chat-open notice. JSON: 1.4.8/dom-v12, signed-in premium, one saved binding, 13 Sent schedules/one cancelled, current visible-bound verified identity, 15 message envelopes with eight incoming/seven outgoing, native Unread118/Groups12, partial 37-name directory stopped by user interaction, one enabled/active Auto Reply rule and last outcome cooldown-or-daily-cap. These 13 Sent records are the user's evidence; we did not send those messages.
 

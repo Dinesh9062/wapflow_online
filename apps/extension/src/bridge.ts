@@ -6,7 +6,7 @@ export class DemoBridge implements Bridge {
  constructor(){const cached=localStorage.getItem('zfleet-demo-v1');this.state=cached?JSON.parse(cached):seedDemo();this.state.settings={...defaultSettings,...this.state.settings};for(const f of this.state.followups){if(!/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(f.id)){const old=f.id;f.id=crypto.randomUUID();for(const j of this.state.schedules)if(j.followupId===old)j.followupId=f.id;}}}
  private save(){localStorage.setItem('zfleet-demo-v1',JSON.stringify(this.state));}
  async request(type:string,e:any={}){
-  if(type==='READ_ALERTS'){this.state.alerts=(this.state.alerts||[]).map(a=>({...a,read:true}));this.save();return {ok:true};}if(type==='TEST_NOTIFICATION'){this.state.alerts=[{id:crypto.randomUUID(),title:'ZFLEET notification test',message:'Demo notification saved',kind:'test',at:Date.now(),read:false},...(this.state.alerts||[])];this.save();return {ok:true};}
+  if(type==='READ_ALERTS'){this.state.alerts=(this.state.alerts||[]).map(a=>({...a,read:true}));this.save();return {ok:true};}if(type==='TEST_NOTIFICATION'){this.state.alerts=[{id:crypto.randomUUID(),title:'Wapflow notification test',message:'Demo notification saved',kind:'test',at:Date.now(),read:false},...(this.state.alerts||[])];this.save();return {ok:true};}
   if(type==='STATE'){if(this.state.delivery){const s=this.state.settings,now=Date.now(),quiet=deliveryWait(s,[],'',now);this.state.delivery={...this.state.delivery,checkedAt:new Date(now).toISOString(),timezone:s.timezone,dailyLimit:s.sendDailyCap||50,resetAt:new Date(dayBounds(now,s.timezone).end).toISOString(),quietActive:!!s.quietHoursEnabled&&inWindow(now,s.timezone,[0,1,2,3,4,5,6],s.quietStart||'22:00',s.quietEnd||'08:00'),quietUntil:quiet?new Date(quiet.until).toISOString():undefined};}return structuredClone(this.state);}
   if(type==='LOGIN'||type==='REGISTER'){this.state.user={name:'Demo User',email:e.body.email};this.save();return this.state;}
   if(type==='LOGOUT'){delete this.state.user;this.save();return this.state;}
@@ -24,7 +24,7 @@ export class DemoBridge implements Bridge {
 }
 export const demoContacts=[
  {key:'default|919876543210@c.us',name:'Amit Sharma',type:'individual' as const},
- {key:'default|120363000111@g.us',name:'ZFLEET Engineering',type:'group' as const},
+ {key:'default|120363000111@g.us',name:'Wapflow Engineering',type:'group' as const},
  {key:'default|919876543211@c.us',name:'Priya Singh',type:'individual' as const},
  {key:'default|120363000222@g.us',name:'Office Updates',type:'group' as const},
  {key:'default|919876543212@c.us',name:'Rahul Verma',type:'individual' as const},
